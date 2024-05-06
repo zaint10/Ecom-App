@@ -8,12 +8,12 @@ import apiService from "../api";
 
 const LoginPage = () => {
   const signIn = useSignIn();
-  // const signOut = useSignOut();
+  const signOut = useSignOut();
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   signOut();
-  // }, [signOut]);
+  useEffect(() => {
+    signOut();
+  }, [signOut]);
 
   const handleLogin = async (email, username, password) => {
     try {
