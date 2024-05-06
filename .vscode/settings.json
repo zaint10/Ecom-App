@@ -1,5 +1,6 @@
 {
   "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "files.exclude": {
     "**/*.pyc": true
@@ -21,7 +22,4 @@
     "editor.formatOnPaste": true
   },
   "pylint.cwd": "${workspaceFolder}/backend",
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
 }

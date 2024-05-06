@@ -1,4 +1,5 @@
 import os
+from urllib.parse import urlparse
 
 from corsheaders.defaults import default_headers
 
@@ -13,16 +14,20 @@ SECRET_KEY = env(
 )
 
 # The Default frontend url (Assuming its developed in react)
-FRONTEND_DEPLOYMENT_HOST = env(
+FRONTEND_DEPLOYMENT_URL = env(
     "FRONTEND_DEPLOYMENT_URL",
-    default="localhost", 
+    default="http://localhost:3000",
 )
+FRONTEND_DEPLOYMENT_HOST = urlparse(FRONTEND_DEPLOYMENT_URL).hostname
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
-CORS_ORIGIN_WHITELIST = ["http://localhost:3000", "http://localhost"]
+ALLOWED_HOSTS = [
+    env("DEPLOYMENT_URL_HOST", default="localhost"),
+    FRONTEND_DEPLOYMENT_HOST,
+]
+CORS_ORIGIN_WHITELIST = [FRONTEND_DEPLOYMENT_URL]
 
-if DEBUG:
-    ALLOWED_HOSTS = ["*"]
+if ENVIRONMENT == "development":
+    ALLOWED_HOSTS.append("*")
     CCORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_HEADERS = (
