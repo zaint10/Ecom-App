@@ -22,4 +22,14 @@
     "editor.formatOnPaste": true
   },
   "pylint.cwd": "${workspaceFolder}/backend",
+  "workbench.colorTheme": "One Dark Pro Mix",
+  "workbench.iconTheme": "eq-material-theme-icons-light",
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#556B2F",
+    "titleBar.activeBackground": "#6E8B3D",
+    "titleBar.activeForeground": "#FAFBF7"
+  },
+  "windowColors.🌈 BaseColor": "DarkOliveGreen",
+  "workbench.preferredHighContrastColorTheme": "Default High Contrast",
+  "workbench.preferredDarkColorTheme": "Default Dark Modern"
 }

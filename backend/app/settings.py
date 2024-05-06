@@ -24,11 +24,12 @@ ALLOWED_HOSTS = [
     env("DEPLOYMENT_URL_HOST", default="localhost"),
     FRONTEND_DEPLOYMENT_HOST,
 ]
-CORS_ORIGIN_WHITELIST = [FRONTEND_DEPLOYMENT_URL]
 
 if ENVIRONMENT == "development":
     ALLOWED_HOSTS.append("*")
-    CCORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    CORS_ORIGIN_WHITELIST = [FRONTEND_DEPLOYMENT_URL]
 
 CORS_ALLOW_HEADERS = (
     *default_headers,
@@ -37,6 +38,7 @@ CORS_ALLOW_HEADERS = (
 
 
 INSTALLED_APPS = [
+    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "corsheaders",
+    # Django Rest Framework
     "rest_framework",
     "rest_framework.authtoken",
     "dj_rest_auth",
@@ -52,7 +55,12 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "dj_rest_auth.registration",
+    # Custom Apps
     "core",
+    "userauths",
+    "store",
+    "customer",
+    "vendor",
 ]
 
 MIDDLEWARE = [
@@ -109,6 +117,42 @@ DATABASES = {
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
+# Admin Panel Settings
+JAZZMIN_SETTINGS = {}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": True,
+    "brand_small_text": False,
+    "brand_colour": "navbar-success",
+    "accent": "accent-lime",
+    "navbar": "navbar-success navbar-dark",
+    "no_navbar_border": True,
+    "navbar_fixed": True,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": False,
+    "sidebar": "sidebar-dark-primary",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": True,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": False,
+    "sidebar_nav_flat_style": False,
+    "theme": "cyborg",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success",
+    },
+}
+
 if ENVIRONMENT == "production":
     AUTH_PASSWORD_VALIDATORS = [
         {
@@ -146,6 +190,19 @@ REST_AUTH = {
     "JWT_AUTH_REFRESH_COOKIE": "_auth_refresh",
     "JWT_AUTH_HTTPONLY": False,
     "JWT_AUTH_RETURN_EXPIRATION": True,
+    "REGISTER_SERIALIZER": "userauths.serializers.UserCreateSerializer",
+    "USER_DETAILS_SERIALIZER": "userauths.serializers.UserSerializer",
 }
+
+SIMPLE_JWT = {"TOKEN_OBTAIN_SERIALIZER": "userauths.MyTokenObtainPairSerializer"}
+
+AUTH_USER_MODEL = "userauths.User"
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+
+# For Development
+ACCOUNT_EMAIL_VERIFICATION = "none"
 
 SITE_ID = 1
