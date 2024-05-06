@@ -2,7 +2,8 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-const apiUrl = process.env.REACT_APP_API_URL;
+const apiUrl = import.meta.env.VITE_APP_API_URL;
+console.log("apiUrl", apiUrl);
 
 const apiService = axios.create({
   baseURL: apiUrl,

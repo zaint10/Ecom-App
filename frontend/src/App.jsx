@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AuthProvider from "react-auth-kit";
-import AuthOutlet from '@auth-kit/react-router/AuthOutlet'
+import AuthOutlet from "@auth-kit/react-router/AuthOutlet";
 import createStore from "react-auth-kit/createStore";
 import createRefresh from "react-auth-kit/createRefresh";
 
@@ -45,7 +45,6 @@ const store = createStore({
 });
 
 function App() {
-  
   return (
     <AuthProvider store={store}>
       <Router>
