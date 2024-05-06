@@ -1,0 +1,27 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "files.exclude": {
+    "**/*.pyc": true
+  },
+  "python.terminal.activateEnvInCurrentTerminal": true,
+  "djangointellisense.projectRoot": "${workspaceFolder}/backend/app",
+  "djangointellisense.settingsModule": "app.settings",
+  "python.autoComplete.extraPaths": ["${workspaceFolder}/backend/app"],
+  "python.analysis.extraPaths": ["${workspaceFolder}/backend/app"],
+  "djangointellisense.debugMessages": true,
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "explicit",
+      "source.organizeImports.ruff": "explicit",
+      "source.fixAll.ruff": "explicit",
+      "source.document": "always"
+    },
+    "editor.formatOnPaste": true
+  },
+  "pylint.cwd": "${workspaceFolder}/backend",
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
