@@ -1,0 +1,26 @@
+# common
+README.md
+CHANGELOG.md
+Dockerfile
+
+# git
+.git
+.gitattributes
+.gitignore
+
+
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+staticfiles/
+
+#python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE
+.vscode/

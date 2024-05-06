@@ -10,11 +10,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = env('SECRET_KEY', default='-05sgp9!deq=q1nltm@^^2cc+v29i(tyybv3v2t77qi66czazj')
 
 # The Default frontend url (Assuming its developed in react)
-FRONTEND_DEPLOYMENT_URL = env('FRONTEND_DEPLOYMENT_URL', default='http://localhost:3000')
+FRONTEND_DEPLOYMENT_HOST = env('FRONTEND_DEPLOYMENT_URL', default='localhost')
 
-ALLOWED_HOSTS = [env('DEPLOYMENT_URL_HOST', default='localhost'), FRONTEND_DEPLOYMENT_URL]
-CORS_ORIGIN_WHITELIST=[FRONTEND_DEPLOYMENT_URL]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+CORS_ORIGIN_WHITELIST=['http://localhost:3000', 'http://localhost']
 
+if DEBUG:
+    ALLOWED_HOSTS = ["*"]
+    CCORS_ALLOW_ALL_ORIGINS = True
+    
 CORS_ALLOW_HEADERS = (
     *default_headers,
     # Add custom headers
@@ -28,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'dj_rest_auth',
@@ -41,7 +46,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -75,11 +82,13 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, STATIC_URL)]
+STATIC_URL = '/dj_static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'dj_static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+WSGI_APPLICATION = 'app.wsgi.application'
 
 DATABASES = {
     "default": {
@@ -87,6 +96,8 @@ DATABASES = {
         "NAME": os.path.join(BASE_DIR, 'db.sqlite3')
     }
 }
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 if ENVIRONMENT == 'production':
     AUTH_PASSWORD_VALIDATORS = [
@@ -121,7 +132,9 @@ REST_AUTH = {
     'USE_JWT': True,
     'JWT_AUTH_COOKIE': '_auth',
     'JWT_AUTH_REFRESH_COOKIE': '_auth_refresh',
+    'JWT_AUTH_HTTPONLY': False,
+    'JWT_AUTH_RETURN_EXPIRATION': True
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 SITE_ID = 1
+

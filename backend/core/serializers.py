@@ -16,6 +16,8 @@ class OrderItemSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()
     items = OrderItemSerializer(many=True)
+    
+    extra_kwargs = {'user': {'read_only': True}}
 
     class Meta:
         model = Order
