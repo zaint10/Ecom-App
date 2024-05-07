@@ -3,13 +3,14 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.utils.translation import gettext_lazy as _
 from shortuuid.django_fields import ShortUUIDField
+from phonenumber_field.modelfields import PhoneNumberField
 
 # Create your models here.
 
 
 class User(AbstractUser):
     email = models.EmailField(_("email address"), unique=True)
-    phone = models.CharField(_("phone"), max_length=100, null=True, blank=True)
+    phone = PhoneNumberField(_("phone"), max_length=100, null=True, blank=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]

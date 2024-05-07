@@ -1,5 +1,6 @@
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from dj_rest_auth.serializers import UserDetailsSerializer
+from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -9,6 +10,7 @@ from userauths.models import Profile, User
 class UserCreateSerializer(RegisterSerializer):
     first_name = serializers.CharField(max_length=100, required=True)
     last_name = serializers.CharField(max_length=100, required=True)
+    phone = PhoneNumberField(required=True)
 
     def get_cleaned_data(self):
         super(UserCreateSerializer, self).get_cleaned_data()
@@ -19,6 +21,7 @@ class UserCreateSerializer(RegisterSerializer):
             "email": self.validated_data.get("email", ""),
             "first_name": self.validated_data.get("first_name", ""),
             "last_name": self.validated_data.get("last_name", ""),
+            "phone": self.validated_data.get("phone", ""),
         }
 
     class Meta:

@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from urllib.parse import urlparse
 
 from corsheaders.defaults import default_headers
@@ -55,8 +56,11 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "dj_rest_auth.registration",
+    # Third Party
+    "phonenumber_field",
+    # API documentation
+    "drf_yasg",
     # Custom Apps
-    "core",
     "userauths",
     "store",
     "customer",
@@ -194,15 +198,23 @@ REST_AUTH = {
     "USER_DETAILS_SERIALIZER": "userauths.serializers.UserSerializer",
 }
 
-SIMPLE_JWT = {"TOKEN_OBTAIN_SERIALIZER": "userauths.MyTokenObtainPairSerializer"}
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "TOKEN_OBTAIN_SERIALIZER": "userauths.serializers.MyTokenObtainPairSerializer",
+}
+
 
 AUTH_USER_MODEL = "userauths.User"
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_ADAPTER = "userauths.adapter.CustomUserCreateAdapter"
 
 # For Development
 ACCOUNT_EMAIL_VERIFICATION = "none"
 
 SITE_ID = 1
+
+LOGOUT_URL = '/v1/auth/logout'
