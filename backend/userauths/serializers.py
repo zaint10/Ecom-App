@@ -4,7 +4,7 @@ from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from userauths.models import Profile, User
+from userauths.models import Profile, User, Item
 
 
 class UserCreateSerializer(RegisterSerializer):
@@ -56,3 +56,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             token["vendor_id"] = 0
 
         return token
+
+
+class ItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Item

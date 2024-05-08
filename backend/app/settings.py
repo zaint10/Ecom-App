@@ -180,8 +180,8 @@ if ENVIRONMENT == "production":
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.SessionAuthentication",
         "dj_rest_auth.jwt_auth.JWTCookieAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
@@ -199,7 +199,7 @@ REST_AUTH = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "TOKEN_OBTAIN_SERIALIZER": "userauths.serializers.MyTokenObtainPairSerializer",
 }
@@ -217,4 +217,4 @@ ACCOUNT_EMAIL_VERIFICATION = "none"
 
 SITE_ID = 1
 
-LOGOUT_URL = '/v1/auth/logout'
+LOGOUT_URL = "/v1/auth/logout"

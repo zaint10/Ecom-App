@@ -66,3 +66,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 
 post_save.connect(create_user_profile, sender=User)
+
+class Item(models.Model):
+    hellow = models.CharField(_("hellow"), max_length=100)
+    
