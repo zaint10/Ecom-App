@@ -10,7 +10,7 @@ export const loginAPI = async ({ email, username, password }) => {
     });
     return { data, error: null };
   } catch (error) {
-    return { data: null, error: error.message };
+    return { data: null, error };
   }
 };
 
@@ -35,7 +35,7 @@ export const registerAPI = async ({
     });
     return { data, error: null };
   } catch (error) {
-    return { data: null, error: error.message };
+    return { data: null, error };
   }
 };
 

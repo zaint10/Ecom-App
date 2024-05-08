@@ -24,6 +24,7 @@
     "react-router": "^6.23.0",
     "react-router-dom": "^6.23.0",
     "simple-zustand-devtools": "^1.1.0",
+    "sweetalert2": "^11.10.8",
     "zustand": "^4.5.2"
   },
   "devDependencies": {

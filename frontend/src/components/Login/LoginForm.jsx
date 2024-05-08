@@ -1,6 +1,19 @@
-import { TextField, Button, Container } from "@mui/material";
+import { TextField, Button, Container, FormHelperText } from "@mui/material";
+import { useEffect, useState } from "react";
+import { parseFormErrors } from "../../utils";
 
-const LoginForm = ({ onSubmit }) => {
+const LoginForm = ({ onSubmit, loginError }) => {
+  const [errors, setErrors] = useState({});
+  const [nonFieldError, setNonFieldError] = useState("");
+
+  useEffect(() => {
+    if (loginError) {
+      const fieldErrors = parseFormErrors(loginError);
+      setErrors(fieldErrors);
+      setNonFieldError(fieldErrors["non_field_errors"] || "");
+    }
+  }, [loginError]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const { email, username, password } = e.target.elements;
@@ -14,6 +27,7 @@ const LoginForm = ({ onSubmit }) => {
   return (
     <Container maxWidth="xs">
       <form onSubmit={handleSubmit}>
+        <FormHelperText error={!!nonFieldError}>{nonFieldError}</FormHelperText>
         <TextField
           margin="normal"
           required
@@ -23,6 +37,8 @@ const LoginForm = ({ onSubmit }) => {
           name="username"
           autoComplete="username"
           autoFocus
+          error={!!errors.username}
+          helperText={errors.username}
         />
         <TextField
           margin="normal"
@@ -33,6 +49,8 @@ const LoginForm = ({ onSubmit }) => {
           name="email"
           autoComplete="email"
           autoFocus
+          error={!!errors.email}
+          helperText={errors.email}
         />
         <TextField
           margin="normal"
@@ -43,6 +61,8 @@ const LoginForm = ({ onSubmit }) => {
           type="password"
           id="password"
           autoComplete="current-password"
+          error={!!errors.password}
+          helperText={errors.password}
         />
         <Button
           type="submit"

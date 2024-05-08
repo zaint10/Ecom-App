@@ -6,7 +6,7 @@ import { authAPIs } from "../APIs";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { executeRequest: requestLogin } = useApi();
+  const { error, executeRequest: requestLogin } = useApi();
   const { doLogin } = authUserStore.getState();
 
   const handleLogin = async (reqData) => {
@@ -19,7 +19,7 @@ const LoginPage = () => {
   return (
     <div>
       <h1>Lets get you sign in!</h1>
-      <LoginForm onSubmit={handleLogin} />
+      <LoginForm onSubmit={handleLogin} loginError={error} />
       <div>
         <Link to="/register">
           <h3>Dont have an acocunt?</h3>

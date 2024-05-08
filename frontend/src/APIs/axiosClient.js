@@ -49,6 +49,7 @@ axiosClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           refreshQueue.push((resolve, reject));
@@ -63,22 +64,28 @@ axiosClient.interceptors.response.use(
       }
     }
     isRefreshing = true;
-    originalRequest._retry = true;
-    {
+    let newAccessToken = null;
+    try {
       const { data, refreshError } = await refreshToken();
-      if (error) {
-        // Redirect to login page or display an
-        // error message saying session expred
-        return Promise.reject(refreshError);
+      if (refreshError) {
+        throw refreshError;
       }
+      newAccessToken = data.refresh;
+      if (originalRequest._retry) {
+        // Retry original request with new access token
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return axiosClient(originalRequest);
+      }
+    } catch (error) {
+      // Redirect to login page or display an
+      // error message saying session expred
+      return Promise.reject(error);
+    } finally {
       isRefreshing = false;
-      refreshQueue.forEach((prom) => prom.resolve(data.refresh));
+      refreshQueue.forEach((prom) => prom.resolve(newAccessToken));
       refreshQueue = [];
-
-      // Retry original request with new access token
-      originalRequest.headers.Authorization = `Bearer ${data.refresh}`;
-      return axiosClient(originalRequest);
     }
+    return Promise.reject(error);
   },
 );
 
