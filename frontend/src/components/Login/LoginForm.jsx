@@ -1,17 +1,20 @@
-import React from "react";
 import { TextField, Button, Container } from "@mui/material";
 
 const LoginForm = ({ onSubmit }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const { email, username, password } = e.target.elements;
-    onSubmit(email.value, username.value, password.value);
+    onSubmit({
+      email: email.value,
+      username: username.value,
+      password: password.value,
+    });
   };
 
   return (
     <Container maxWidth="xs">
       <form onSubmit={handleSubmit}>
-      <TextField
+        <TextField
           margin="normal"
           required
           fullWidth

@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { mountStoreDevtool } from "simple-zustand-devtools";
-import { clearAuthCookies, loginAPI, setAuthCookies } from "../utils/auth";
+import { clearAuthCookies, setAuthCookies } from "../utils/auth";
 
-const userAuthStore = create((set, get) => ({
+const authUserStore = create((set, get) => ({
   authUser: null,
   loading: false,
   setLoading: (loading) => set({ loading: loading }),
@@ -15,13 +15,9 @@ const userAuthStore = create((set, get) => ({
     phone: get().authUser.phone || null,
   }),
   isAuthenticated: () => get().authUser !== null,
-  login: async (email, username, password) => {
-    const { data, error } = await loginAPI(email, username, password);
-    if (error) {
-      // empty //
-    }
-    await setAuthCookies(data.access, data.refresh);
-    get().setUser(data.user);
+  doLogin: async ({ access, refresh, user }) => {
+    await setAuthCookies(access, refresh);
+    get().setUser(user);
     return true;
   },
   logout: () => {
@@ -31,7 +27,7 @@ const userAuthStore = create((set, get) => ({
 }));
 
 if (import.meta.env.DEV) {
-  mountStoreDevtool("Store", userAuthStore);
+  mountStoreDevtool("Store", authUserStore);
 }
 
-export { userAuthStore };
+export { authUserStore };

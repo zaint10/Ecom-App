@@ -1,15 +1,8 @@
 import { Outlet, Navigate } from "react-router-dom";
-import { userAuthStore } from "../store/auth";
-import PropTypes from "prop-types";
+import { authUserStore } from "../store/auth";
 
 const PrivateRoute = ({ fallbackPath = "/login" }) => {
-  const isAuthenticated = userAuthStore.getState(
-    (state) => state.isAuthenticated,
-  );
-
-  PrivateRoute.propTypes = {
-    fallbackPath: PropTypes.string,
-  };
+  const isAuthenticated = authUserStore((state) => state.isAuthenticated());
 
   return isAuthenticated ? <Outlet /> : <Navigate to={fallbackPath} />;
 };

@@ -1,5 +1,5 @@
-// import { userAuthStore } from "../store/auth";
-import axiosPrivate from "./axios";
+import { fetchAuthUserAPI, refreshTokenAPI } from "../APIs/auth";
+import axiosClient from "../APIs/axiosClient";
 import Cookies from "js-cookie";
 import {
   ACCESS_TOKEN_KEY_NAME,
@@ -7,45 +7,6 @@ import {
   REFRESH_TOKEN_KEY_NAME,
 } from "./constants";
 import { jwtDecode } from "jwt-decode";
-
-const loginAPI = async (email, username, password) => {
-  try {
-    const { data } = await axiosPrivate.post("/auth/login/", {
-      email,
-      username,
-      password,
-    });
-    return { data, error: null };
-  } catch (error) {
-    return { data: null, error: error.message };
-  }
-};
-
-const register = async (
-  first_name,
-  last_name,
-  username,
-  phone,
-  email,
-  password1,
-  password2,
-) => {
-  try {
-    const { data } = await axiosPrivate.pust("/auth/register", {
-      first_name,
-      last_name,
-      phone,
-      username,
-      email,
-      password1,
-      password2,
-    });
-    await loginAPI(email, password1);
-    return { data, error: null };
-  } catch (error) {
-    return { data: null, error: error.message };
-  }
-};
 
 const setAuthCookies = async (accessToken, refreshToken) => {
   const decodedAccessToken = jwtDecode(accessToken);
@@ -56,7 +17,7 @@ const setAuthCookies = async (accessToken, refreshToken) => {
   Cookies.set(REFRESH_TOKEN_KEY_NAME, refreshToken, {
     expires: new Date(decodedRefreshToken.exp * 1000),
   });
-  const { data: user } = await axiosPrivate.get("/auth/user");
+  const { data: user } = await axiosClient.get("/auth/user");
   Cookies.set(AUTH_STATE_KEY_NAME, JSON.stringify(user));
 };
 
@@ -90,35 +51,38 @@ const isAccessTokenExpired = (accessToken) => {
 
 const refreshToken = async () => {
   const authCookies = getAuthCookies();
-  if (isAccessTokenExpired(authCookies.access)) {
-    try {
-      const { data } = await axiosPrivate.post("/auth/token/refresh/", {
-        refresh: authCookies.refresh,
-      });
-
-      await setAuthCookies(data.access, authCookies.refresh);
-      return data.access;
-    } catch (error) {
-      clearAuthCookies();
-    }
+  const { data, error } = await refreshTokenAPI(authCookies.refresh);
+  if (!error) {
+    await setAuthCookies(data.access, authCookies.refresh);
+    return { data, error: null };
   }
+  return { data: null, error };
 };
 
-const fetchAuthUserAPI = async () => {
-  try {
-    const { data } = await axiosPrivate.get("/auth/user");
-    return { data, error: null };
-  } catch (error) {
-    return { data: null, error };
+const fetchAndHandleAuthenticatedUser = async () => {
+  const authCookies = getAuthCookies();
+  if (!authCookies.refresh) {
+    throw new Error("USER_NOT_LOGGED_IN");
   }
+
+  if (isAccessTokenExpired(authCookies.access)) {
+    const { error } = await refreshToken();
+    if (error) {
+      throw error;
+    }
+  }
+  const { data, error } = await fetchAuthUserAPI();
+  if (error) {
+    throw error;
+  }
+
+  return data;
 };
 
 export {
-  loginAPI,
-  register,
-  fetchAuthUserAPI,
   isAccessTokenExpired,
   refreshToken,
   setAuthCookies,
   getAuthCookies,
+  fetchAndHandleAuthenticatedUser,
 };

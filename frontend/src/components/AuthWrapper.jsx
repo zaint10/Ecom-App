@@ -1,31 +1,27 @@
 import { useEffect, useState } from "react";
-import { fetchAuthUserAPI, getAuthCookies, refreshToken } from "../utils/auth";
-import { userAuthStore } from "../store/auth";
+import { fetchAndHandleAuthenticatedUser } from "../utils/auth";
+import { authUserStore } from "../store/auth";
 
 const AuthWrapper = ({ children }) => {
   const [loading, setLoading] = useState(true);
-  const { logout, setUser } = userAuthStore.getState();
+  const { logout, setUser } = authUserStore.getState();
 
   useEffect(() => {
     setLoading(true);
-    const authCookies = getAuthCookies();
-    if (!authCookies.access || !authCookies.refresh) {
-      setLoading(false);
-    }
 
-    const handler = async () => {
-      await refreshToken();
-      const { data: user, error } = await fetchAuthUserAPI();
-      if (error) {
+    const handle = async () => {
+      let user = null;
+      try {
+        user = await fetchAndHandleAuthenticatedUser();
+      } catch (error) {
         logout();
-      } else {
+      } finally {
         setUser(user);
+        setLoading(false);
       }
-
-      setLoading(false);
     };
 
-    handler();
+    handle();
   }, [logout, setUser]);
 
   return <>{loading ? null : children}</>;

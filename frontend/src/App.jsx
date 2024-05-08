@@ -20,7 +20,6 @@ function App() {
           >
             <Route exact path="/" element={<HomePage />} />
           </Route>
-          {/* <Route path="/" element={<PrivateRoute><HomePage /></PrivateRoute>} /> */}
 
           <Route exact path="/login" element={<LoginPage />} />
           <Route exact path="/register" element={<RegisterPage />} />
