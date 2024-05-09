@@ -12,12 +12,7 @@ function App() {
     <AuthWrapper>
       <Router>
         <Routes>
-          <Route exact path="/login" element={<LoginPage />} />
-          <Route
-            exact
-            path="/"
-            element={<PrivateRoute fallbackPath="/login" />}
-          >
+          <Route path="/" element={<PrivateRoute fallbackPath="/login" />}>
             <Route exact path="/" element={<HomePage />} />
             <Route exact path="/home" element={<HomePage />} />
           </Route>

@@ -8,17 +8,15 @@ import { authAPIs } from "@services/index";
 const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { state } = location;
   const { error, executeRequest: requestLogin } = useApi();
   const { doLogin } = authUserStore.getState();
 
   const handleLogin = async (reqData) => {
     const { data, error } = await requestLogin(authAPIs.loginAPI, reqData);
     if (!error && (await doLogin(data))) {
-      if (location.state) {
-        navigate(location.state);
-      } else {
-        navigate("/");
-      }
+      const { from } = state || { from: { pathname: "/" } };
+      navigate(from.pathname);
     }
   };
 
