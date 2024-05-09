@@ -1,13 +1,9 @@
 import { URLS } from "@services/urls";
 import axiosClient from "@services/axiosClient";
 
-export const loginAPI = async ({ email, username, password }) => {
+export const loginAPI = async (reqData) => {
   try {
-    const { data } = await axiosClient.post(URLS.login, {
-      email,
-      username,
-      password,
-    });
+    const { data } = await axiosClient.post(URLS.login, reqData);
     return { data, error: null };
   } catch (error) {
     return { data: null, error };

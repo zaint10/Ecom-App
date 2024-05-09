@@ -1,8 +1,9 @@
 import { create } from "zustand";
-import { mountStoreDevtool } from "simple-zustand-devtools";
+// import { mountStoreDevtool } from "simple-zustand-devtools";
 import { clearAuthCookies, setAuthCookies } from "@utils/auth";
+import { devtools } from "zustand/middleware";
 
-const authUserStore = create((set, get) => ({
+let authUserStore = (set, get) => ({
   authUser: null,
   loading: false,
   setLoading: (loading) => set({ loading: loading }),
@@ -20,14 +21,16 @@ const authUserStore = create((set, get) => ({
     get().setUser(user);
     return true;
   },
-  logout: () => {
+  doLogout: () => {
     clearAuthCookies();
     get().setUser(null);
   },
-}));
+});
 
 if (import.meta.env.DEV) {
-  mountStoreDevtool("StoreZain", authUserStore);
+  authUserStore = create(devtools(authUserStore));
+} else {
+  authUserStore = create(authUserStore);
 }
 
 export { authUserStore };

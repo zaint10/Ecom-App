@@ -5,7 +5,7 @@ export const parseFormErrors = (error) => {
     // Iterate over each field in the error data
     for (const fieldName in errorData) {
       // Extract the error message for the field
-      const errorMessage = errorData[fieldName].join("\n"); // Assuming only one error per field
+      const errorMessage = errorData[fieldName][0]; // Assuming only one error per field
       // Associate the error message with the field name
       fieldErrors[fieldName] = errorMessage;
     }

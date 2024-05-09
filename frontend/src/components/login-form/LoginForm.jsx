@@ -16,10 +16,9 @@ const LoginForm = ({ onSubmit, loginError }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { email, username, password } = e.target.elements;
+    const { email, password } = e.target.elements;
     onSubmit({
       email: email.value,
-      username: username.value,
       password: password.value,
     });
   };
@@ -28,18 +27,6 @@ const LoginForm = ({ onSubmit, loginError }) => {
     <Container maxWidth="xs">
       <form onSubmit={handleSubmit}>
         <FormHelperText error={!!nonFieldError}>{nonFieldError}</FormHelperText>
-        <TextField
-          margin="normal"
-          required
-          fullWidth
-          id="username"
-          label="Username"
-          name="username"
-          autoComplete="username"
-          autoFocus
-          error={!!errors.username}
-          helperText={errors.username}
-        />
         <TextField
           margin="normal"
           required

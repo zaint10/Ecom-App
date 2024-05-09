@@ -1,6 +1,6 @@
 const URLS = {
   login: "/auth/login/",
-  register: "/auth/registeration/",
+  register: "/auth/registration/",
   tokenRefresh: "/auth/token/refresh/",
   authUser: "/auth/user",
 };

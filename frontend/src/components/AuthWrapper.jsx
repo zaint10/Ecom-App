@@ -4,7 +4,10 @@ import { authUserStore } from "@store/auth";
 
 const AuthWrapper = ({ children }) => {
   const [loading, setLoading] = useState(true);
-  const { logout, setUser } = authUserStore.getState();
+  const [doLogout, setUser] = authUserStore((state) => [
+    state.doLogout,
+    state.setUser,
+  ]);
 
   useEffect(() => {
     setLoading(true);
@@ -14,7 +17,7 @@ const AuthWrapper = ({ children }) => {
       try {
         user = await fetchAndHandleAuthenticatedUser();
       } catch (error) {
-        logout();
+        doLogout();
       } finally {
         setUser(user);
         setLoading(false);
@@ -22,7 +25,7 @@ const AuthWrapper = ({ children }) => {
     };
 
     handle();
-  }, [logout, setUser]);
+  }, [doLogout, setUser]);
 
   return <>{loading ? null : children}</>;
 };
