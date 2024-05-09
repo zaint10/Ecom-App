@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { mountStoreDevtool } from "simple-zustand-devtools";
-import { clearAuthCookies, setAuthCookies } from "../utils/auth";
+import { clearAuthCookies, setAuthCookies } from "@utils/auth";
 
 const authUserStore = create((set, get) => ({
   authUser: null,
@@ -27,7 +27,7 @@ const authUserStore = create((set, get) => ({
 }));
 
 if (import.meta.env.DEV) {
-  mountStoreDevtool("Store", authUserStore);
+  mountStoreDevtool("StoreZain", authUserStore);
 }
 
 export { authUserStore };

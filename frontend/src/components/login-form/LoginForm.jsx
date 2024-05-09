@@ -1,6 +1,6 @@
 import { TextField, Button, Container, FormHelperText } from "@mui/material";
 import { useEffect, useState } from "react";
-import { parseFormErrors } from "../../utils";
+import { parseFormErrors } from "@utils/index";
 
 const LoginForm = ({ onSubmit, loginError }) => {
   const [errors, setErrors] = useState({});

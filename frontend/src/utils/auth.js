@@ -1,5 +1,5 @@
-import { fetchAuthUserAPI, refreshTokenAPI } from "../APIs/auth";
-import axiosClient from "../APIs/axiosClient";
+import { fetchAuthUserAPI, refreshTokenAPI } from "@services/auth";
+import axiosClient from "@services/axiosClient";
 import Cookies from "js-cookie";
 import {
   ACCESS_TOKEN_KEY_NAME,

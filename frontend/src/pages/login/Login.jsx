@@ -1,18 +1,24 @@
-import { Link, useNavigate } from "react-router-dom";
-import LoginForm from "../components/Login/LoginForm";
-import { authUserStore } from "../store/auth";
-import useApi from "../APIs/useApi";
-import { authAPIs } from "../APIs";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import LoginForm from "@components/login-form/LoginForm";
+import { authUserStore } from "@store/auth";
+
+import { useApi } from "@hooks/index";
+import { authAPIs } from "@services/index";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { error, executeRequest: requestLogin } = useApi();
   const { doLogin } = authUserStore.getState();
 
   const handleLogin = async (reqData) => {
     const { data, error } = await requestLogin(authAPIs.loginAPI, reqData);
     if (!error && (await doLogin(data))) {
-      navigate("/");
+      if (location.state) {
+        navigate(location.state);
+      } else {
+        navigate("/");
+      }
     }
   };
 

@@ -1,5 +1,5 @@
 import Axios from "axios";
-import { refreshToken, getAuthCookies } from "../utils/auth";
+import { refreshToken, getAuthCookies } from "@utils/auth";
 
 const baseURL = import.meta.env.VITE_APP_API_URL;
 

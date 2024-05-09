@@ -1,5 +1,5 @@
-import { URLS } from "./URLS";
-import axiosClient from "./axiosClient";
+import { URLS } from "@services/urls";
+import axiosClient from "@services/axiosClient";
 
 export const loginAPI = async ({ email, username, password }) => {
   try {

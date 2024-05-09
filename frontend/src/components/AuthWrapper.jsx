@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchAndHandleAuthenticatedUser } from "../utils/auth";
-import { authUserStore } from "../store/auth";
+import { fetchAndHandleAuthenticatedUser } from "@utils/auth";
+import { authUserStore } from "@store/auth";
 
 const AuthWrapper = ({ children }) => {
   const [loading, setLoading] = useState(true);
