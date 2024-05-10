@@ -15,22 +15,23 @@ SECRET_KEY = env(
 )
 
 # The Default frontend url (Assuming its developed in react)
-FRONTEND_DEPLOYMENT_URL = env(
-    "FRONTEND_DEPLOYMENT_URL",
+FRONTEND_URL = env(
+    "FRONTEND_URL",
     default="http://localhost:3000",
 )
-FRONTEND_DEPLOYMENT_HOST = urlparse(FRONTEND_DEPLOYMENT_URL).hostname
-DEPLOYMENT_URL_HOST = env("DEPLOYMENT_URL_HOST", default="localhost")
+FRONTEND_HOST = urlparse(FRONTEND_URL).hostname
+print(FRONTEND_URL)
+BACKEND_HOST = env("BACKEND_HOST", default="localhost")
 ALLOWED_HOSTS = [
-    DEPLOYMENT_URL_HOST,
-    FRONTEND_DEPLOYMENT_HOST,
+    BACKEND_HOST,
+    FRONTEND_HOST,
 ]
 
 if ENVIRONMENT == "development":
     ALLOWED_HOSTS.append("*")
     CORS_ALLOW_ALL_ORIGINS = True
 else:
-    CORS_ORIGIN_WHITELIST = [FRONTEND_DEPLOYMENT_URL]
+    CORS_ORIGIN_WHITELIST = [FRONTEND_URL]
 
 CORS_ALLOW_HEADERS = (
     *default_headers,
@@ -145,6 +146,7 @@ REST_AUTH = {
     "JWT_AUTH_RETURN_EXPIRATION": True,
     "REGISTER_SERIALIZER": "userauths.serializers.UserCreateSerializer",
     "USER_DETAILS_SERIALIZER": "userauths.serializers.UserSerializer",
+    "PASSWORD_RESET_USE_SITES_DOMAIN": DEBUG,
 }
 
 # simplejwt setting (tokens)
@@ -163,6 +165,10 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_ADAPTER = "userauths.adapter.CustomUserCreateAdapter"
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[E-Commerce Store] "
+ACCOUNT_PASSWORD_RESET_TOKEN_GENERATOR = (
+    "allauth.account.forms.EmailAwarePasswordResetTokenGenerator"
+)
+PASSWORD_RESET_TIMEOUT = 60 * 60 * 24 * 3  # 3 Days
 
 # Email Backend settings
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -174,8 +180,9 @@ EMAIL_HOST_PASSWORD = "xzmqfespkrkewbrc"
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Site settings
-SITE_DOMAIN = DEPLOYMENT_URL_HOST
-SITE_ID = 1
+SITE_DOMAIN = BACKEND_HOST
+SITES_ENABLED = True
+SITE_ID = 2
 
 LOGOUT_URL = "/auth/logout"
 
@@ -232,3 +239,6 @@ if ENVIRONMENT == "production":
     SECURE_REDIRECT_EXEMPT = []
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    REST_AUTH["PASSWORD_RESET_USE_SITES_DOMAIN"] = True
+    SITES_ENABLED = True
+    SITE_ID = 2

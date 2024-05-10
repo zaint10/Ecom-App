@@ -7,6 +7,7 @@ from django.urls import include, path, reverse
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
+from userauths import views as userauth_views
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -44,6 +45,11 @@ urlpatterns = [
         "password/reset/confirm/<uidb64>/<token>/",
         PasswordResetConfirmView.as_view(),
         name="password_reset_confirm",
+    ),
+    path(
+        "password/reset/token/verify",
+        userauth_views.PasswordResetTokenVerifyAPIView.as_view(),
+        name="password_reset_token_verify",
     ),
     path("auth/", include("userauths.urls", namespace="auth")),
 ]

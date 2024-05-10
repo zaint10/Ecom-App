@@ -1,6 +1,5 @@
 from allauth.account.utils import user_pk_to_url_str
 from allauth.utils import build_absolute_uri
-from dj_rest_auth.forms import AllAuthPasswordResetForm
 from dj_rest_auth.registration.serializers import RegisterSerializer
 from dj_rest_auth.serializers import PasswordResetSerializer, UserDetailsSerializer
 from django.urls import reverse
@@ -80,14 +79,10 @@ def custom_url_generator(request, user, temp_key):
     return url
 
 
-class CustomAllAuthPasswordResetForm(AllAuthPasswordResetForm):
-
-    def save(self, request, **kwargs):
-        kwargs["url_generator"] = custom_url_generator
-        super().save(request, **kwargs)
-
-
 class CustomPasswordResetSerializer(PasswordResetSerializer):
-    @property
-    def password_reset_form_class(self):
-        return CustomAllAuthPasswordResetForm
+    pass
+
+
+class PasswordResetTokenVerifySerializer(serializers.Serializer):
+    token = serializers.CharField()
+    uid = serializers.CharField()
