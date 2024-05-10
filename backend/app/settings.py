@@ -20,9 +20,9 @@ FRONTEND_DEPLOYMENT_URL = env(
     default="http://localhost:3000",
 )
 FRONTEND_DEPLOYMENT_HOST = urlparse(FRONTEND_DEPLOYMENT_URL).hostname
-
+DEPLOYMENT_URL_HOST = env("DEPLOYMENT_URL_HOST", default="localhost")
 ALLOWED_HOSTS = [
-    env("DEPLOYMENT_URL_HOST", default="localhost"),
+    DEPLOYMENT_URL_HOST,
     FRONTEND_DEPLOYMENT_HOST,
 ]
 
@@ -39,6 +39,7 @@ CORS_ALLOW_HEADERS = (
 
 
 INSTALLED_APPS = [
+    # customize admin ui
     "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -112,6 +113,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 WSGI_APPLICATION = "app.wsgi.application"
 
+AUTH_USER_MODEL = "userauths.User"
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -120,6 +123,61 @@ DATABASES = {
 }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Authentication setting
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "dj_rest_auth.jwt_auth.JWTCookieAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ),
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+}
+
+# dj_rest_auth settings
+REST_AUTH = {
+    "USE_JWT": True,
+    "JWT_AUTH_COOKIE": "_auth",
+    "JWT_AUTH_REFRESH_COOKIE": "_auth_refresh",
+    "JWT_AUTH_HTTPONLY": False,
+    "JWT_AUTH_RETURN_EXPIRATION": True,
+    "REGISTER_SERIALIZER": "userauths.serializers.UserCreateSerializer",
+    "USER_DETAILS_SERIALIZER": "userauths.serializers.UserSerializer",
+}
+
+# simplejwt setting (tokens)
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "TOKEN_OBTAIN_SERIALIZER": "userauths.serializers.MyTokenObtainPairSerializer",
+}
+
+
+# Dj-Allauth Settings for Accounts
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_ADAPTER = "userauths.adapter.CustomUserCreateAdapter"
+ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "[E-Commerce Store] "
+
+# Email Backend settings
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST = "smtp.office365.com"
+EMAIL_HOST_USER = "codebyzain@outlook.com"
+EMAIL_HOST_PASSWORD = "xzmqfespkrkewbrc"
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Site settings
+SITE_DOMAIN = DEPLOYMENT_URL_HOST
+SITE_ID = 1
+
+LOGOUT_URL = "/auth/logout"
 
 
 # Admin Panel Settings
@@ -174,47 +232,3 @@ if ENVIRONMENT == "production":
     SECURE_REDIRECT_EXEMPT = []
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-
-# Authentication setting
-
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "dj_rest_auth.jwt_auth.JWTCookieAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
-    ),
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
-    ],
-}
-
-REST_AUTH = {
-    "USE_JWT": True,
-    "JWT_AUTH_COOKIE": "_auth",
-    "JWT_AUTH_REFRESH_COOKIE": "_auth_refresh",
-    "JWT_AUTH_HTTPONLY": False,
-    "JWT_AUTH_RETURN_EXPIRATION": True,
-    "REGISTER_SERIALIZER": "userauths.serializers.UserCreateSerializer",
-    "USER_DETAILS_SERIALIZER": "userauths.serializers.UserSerializer",
-}
-
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
-    "TOKEN_OBTAIN_SERIALIZER": "userauths.serializers.MyTokenObtainPairSerializer",
-}
-
-
-AUTH_USER_MODEL = "userauths.User"
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_USERNAME_REQUIRED = True
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_ADAPTER = "userauths.adapter.CustomUserCreateAdapter"
-
-# For Development
-ACCOUNT_EMAIL_VERIFICATION = "none"
-
-SITE_ID = 1
-
-LOGOUT_URL = "/v1/auth/logout"

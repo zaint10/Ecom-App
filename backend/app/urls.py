@@ -1,12 +1,12 @@
+from dj_rest_auth.views import PasswordResetConfirmView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.http import HttpResponseRedirect, JsonResponse
-from django.urls import path, reverse, include
+from django.urls import include, path, reverse
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
-from userauths import views as userauths_views
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -40,9 +40,12 @@ urlpatterns = [
         name="swagger-ui",
     ),
     path("admin/", admin.site.urls),
-    # Swagger Logout button point to LOGOUT_URL=/accounts/logout/ setting
-    path("v1/", include("userauths.urls", namespace="userauths")),
-    # path("v1/items", userauths_views.ItemListCreateAPIView.as_view()),
+    path(
+        "password/reset/confirm/<uidb64>/<token>/",
+        PasswordResetConfirmView.as_view(),
+        name="password_reset_confirm",
+    ),
+    path("auth/", include("userauths.urls", namespace="auth")),
 ]
 
 if settings.DEBUG:

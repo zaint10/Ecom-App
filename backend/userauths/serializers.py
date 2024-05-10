@@ -1,10 +1,14 @@
+from allauth.account.utils import user_pk_to_url_str
+from allauth.utils import build_absolute_uri
+from dj_rest_auth.forms import AllAuthPasswordResetForm
 from dj_rest_auth.registration.serializers import RegisterSerializer
-from dj_rest_auth.serializers import UserDetailsSerializer
+from dj_rest_auth.serializers import PasswordResetSerializer, UserDetailsSerializer
+from django.urls import reverse
 from phonenumber_field.serializerfields import PhoneNumberField
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from userauths.models import Profile, User, Item
+from userauths.models import Item, Profile, User
 
 
 class UserCreateSerializer(RegisterSerializer):
@@ -61,3 +65,29 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
+
+
+def custom_url_generator(request, user, temp_key):
+    path = reverse(
+        "accounts:password_reset_confirm",
+        args=[user_pk_to_url_str(user), temp_key],
+    )
+
+    url = build_absolute_uri(request, path)
+
+    url = url.replace("%3F", "?")
+
+    return url
+
+
+class CustomAllAuthPasswordResetForm(AllAuthPasswordResetForm):
+
+    def save(self, request, **kwargs):
+        kwargs["url_generator"] = custom_url_generator
+        super().save(request, **kwargs)
+
+
+class CustomPasswordResetSerializer(PasswordResetSerializer):
+    @property
+    def password_reset_form_class(self):
+        return CustomAllAuthPasswordResetForm

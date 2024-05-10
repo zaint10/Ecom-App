@@ -6,5 +6,6 @@ class CustomUserCreateAdapter(DefaultAccountAdapter):
         user = super().save_user(request, user, form, commit)
         data = form.cleaned_data
         user.phone = data.get("phone")
+        user.username = data.get("username")
         user.save()
         return user
