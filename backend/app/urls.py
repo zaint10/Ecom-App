@@ -47,7 +47,7 @@ urlpatterns = [
         name="password_reset_confirm",
     ),
     path(
-        "password/reset/token/verify",
+        "password/reset/token/verify/",
         userauth_views.PasswordResetTokenVerifyAPIView.as_view(),
         name="password_reset_token_verify",
     ),

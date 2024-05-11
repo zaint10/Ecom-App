@@ -147,6 +147,7 @@ REST_AUTH = {
     "REGISTER_SERIALIZER": "userauths.serializers.UserCreateSerializer",
     "USER_DETAILS_SERIALIZER": "userauths.serializers.UserSerializer",
     "PASSWORD_RESET_USE_SITES_DOMAIN": DEBUG,
+    "OLD_PASSWORD_FIELD_ENABLED": True,
 }
 
 # simplejwt setting (tokens)

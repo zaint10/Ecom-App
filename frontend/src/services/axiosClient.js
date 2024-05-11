@@ -62,28 +62,29 @@ axiosClient.interceptors.response.use(
             return Promise.reject(error);
           });
       }
-    }
-    isRefreshing = true;
-    let newAccessToken = null;
-    try {
-      const { data, refreshError } = await refreshToken();
-      if (refreshError) {
-        throw refreshError;
+
+      isRefreshing = true;
+      let newAccessToken = null;
+      try {
+        const { data, refreshError } = await refreshToken();
+        if (refreshError) {
+          throw refreshError;
+        }
+        newAccessToken = data.refresh;
+        if (originalRequest._retry) {
+          // Retry original request with new access token
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          return axiosClient(originalRequest);
+        }
+      } catch (error) {
+        // Redirect to login page or display an
+        // error message saying session expred
+        return Promise.reject(error);
+      } finally {
+        isRefreshing = false;
+        refreshQueue.forEach((prom) => prom.resolve(newAccessToken));
+        refreshQueue = [];
       }
-      newAccessToken = data.refresh;
-      if (originalRequest._retry) {
-        // Retry original request with new access token
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return axiosClient(originalRequest);
-      }
-    } catch (error) {
-      // Redirect to login page or display an
-      // error message saying session expred
-      return Promise.reject(error);
-    } finally {
-      isRefreshing = false;
-      refreshQueue.forEach((prom) => prom.resolve(newAccessToken));
-      refreshQueue = [];
     }
     return Promise.reject(error);
   },

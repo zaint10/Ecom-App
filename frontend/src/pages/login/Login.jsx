@@ -39,6 +39,9 @@ const LoginPage = () => {
         <Link to="/register">
           <h3>Dont have an acocunt?</h3>
         </Link>
+        <Link to="/forgot-password">
+          <h3>Forgot your password?</h3>
+        </Link>
       </div>
     </div>
   );
